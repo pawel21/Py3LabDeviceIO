@@ -17,3 +17,7 @@ To create virtual environment you have to:
 `chmod +x create_environment.sh`
 
 `./create_environment.sh`
+
+or you can also:
+
+`make`
