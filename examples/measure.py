@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -13,7 +14,7 @@ sys.path.insert(0, path_to_utils)
 from device import Device
 
 
-def do_measure(numbers_of_point_to_measure, start_current, stop_current, output_directory):
+def do_measure(numbers_of_point_to_measure, start_current, stop_current, output_file):
     current = np.zeros(numbers_of_point_to_measure)
     voltage = np.zeros(numbers_of_point_to_measure)
     power = np.zeros(numbers_of_point_to_measure)
@@ -31,17 +32,19 @@ def do_measure(numbers_of_point_to_measure, start_current, stop_current, output_
     ax1.set_xlabel('J [A]')
     ax1.set_ylabel('L [W]', color='r')
     ax2.set_ylabel('U [V]', color='g')
-    np.savetxt(output_directory, np.c_[current, voltage, power], fmt='%1.16f')
+    save_data(output_file, current, voltage, power)
     plt.grid(True)
     plt.show()
 
 
-def save_data():
-    pass
+def save_data(output_file, current, voltage, power):
+    now = datetime.datetime.now()
+    info = "Measurment \n"
+    info += now.strftime("%Y-%m-%d %H:%M")
+    np.savetxt(output_file, np.c_[current, voltage, power], fmt='%1.16f', header=info)
 
-
-current_working_directory = os.getcwd()
-OUTPUT_DIRECTORY = os.path.join(current_working_directory, "output")
+CURRENT_WORKING_DIRECTORY = os.getcwd()
+OUTPUT_FILE = os.path.join(CURRENT_WORKING_DIRECTORY, "output")
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument("-nr", "--numbers_of_points_to_measure", type=int,
@@ -51,7 +54,7 @@ parser.add_argument("-sc", "--start_current", type=float,
 parser.add_argument("-ec", "--stop_current", type=float,
                     default=0, help="Stop current")
 parser.add_argument("-fn", "--file_name", type=str,
-                    default=os.path.join(OUTPUT_DIRECTORY, "data.txt"),
+                    default=os.path.join(OUTPUT_FILE, "data.txt"),
                     help="path to output directory")
 
 
