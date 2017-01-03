@@ -32,13 +32,13 @@ class Device:
     def get_ldc4005_instance(self):
         map_of_available_device = self.available_device()
         for port in self.available_port:
-            if "LDC4005" in map_of_available_device[port]:
+            if b"LDC4005" in map_of_available_device[port]:
                 return LDC4005(port)
 
     def get_pm100_instance(self):
         map_of_available_device = self.available_device()
         for port in self.available_port:
-            if "PM100" in map_of_available_device[port]:
+            if b"PM100" in map_of_available_device[port]:
                 return PM100(port)
 
 dev = Device()
