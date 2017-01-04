@@ -16,10 +16,13 @@ from device import Device
 
 
 def do_measure(numbers_of_point_to_measure, start_current, stop_current, output_file):
-
-    dev = Device()
-    ldc4005 = dev.get_ldc4005_instance()
-    pm100 = dev.get_pm100_instance()
+    try:
+        dev = Device()
+        ldc4005 = dev.get_ldc4005_instance()
+        pm100 = dev.get_pm100_instance()
+    except Exception as err:
+        print("Proble in connect with device")
+        sys.exit(1)
 
     current = np.linspace(float(start_current)*1e-3, float(stop_current)*1e-3, numbers_of_point_to_measure)
     voltage = np.zeros(numbers_of_point_to_measure)
@@ -71,12 +74,13 @@ if __name__ == "__main__":
                     default=0, help="Stop current in mA")
     parser.add_argument("-fn", "--file_name", type=str,
                     default=os.path.join(OUTPUT_FILE, "data.txt"),
-                    help="path to output directory")
+                    help="path to output file")
 
     args = parser.parse_args()
-    print(args.numbers_of_points_to_measure)
-    print(args.start_current)
-    print(args.stop_current)
+    print("Numbers of points to measure: %s"  %args.numbers_of_points_to_measure)
+    print("Start current %s mA" %args.start_current)
+    print("Stop current %s mA"  %args.stop_current)
+    print("Path to output file with data:", end=" ")
     print(args.file_name)
 
     do_measure(args.numbers_of_points_to_measure, args.start_current, args.stop_current, args.file_name)

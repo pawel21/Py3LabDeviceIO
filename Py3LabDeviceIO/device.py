@@ -32,14 +32,21 @@ class Device:
     def get_ldc4005_instance(self):
         map_of_available_device = self.available_device()
         for port in self.available_port:
-            if b"LDC4005" in map_of_available_device[port]:
-                return LDC4005(port)
+            try:
+                if b"LDC4005" in map_of_available_device[port]:
+                    return LDC4005(port)
+            except Exception as err:
+                print("Error in connections with LDC4005")
+                print(err)
+                sys.exit(1)
 
     def get_pm100_instance(self):
         map_of_available_device = self.available_device()
         for port in self.available_port:
-            if b"PM100" in map_of_available_device[port]:
-                return PM100(port)
-
-dev = Device()
-print(dev.available_device())
+            try:
+                if b"PM100" in map_of_available_device[port]:
+                    return PM100(port)
+            except Exception as err:
+                print("Error in connections with pm100")
+                print(err)
+                sys.exit(1)
