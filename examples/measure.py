@@ -57,7 +57,7 @@ def do_measure(numbers_of_point_to_measure, start_current, stop_current, output_
 
 def save_data(output_file,wavelength, current, voltage, power):
     now = datetime.datetime.now()
-    info = "Measurment \t "
+    info = "current [A] \t voltage [V] \t power [W] \t wavelenght:"
     info += str(wavelength)
     info += " nm"
     info += now.strftime("\t %Y-%m-%d %H:%M")
