@@ -24,6 +24,7 @@ def do_measure(numbers_of_point_to_measure, start_current, stop_current, output_
         print("Proble in connect with device")
         sys.exit(1)
 
+    wavelength = pm100.get_current_wavelength_in_nm()
     current = np.linspace(float(start_current)*1e-3, float(stop_current)*1e-3, numbers_of_point_to_measure)
     voltage = np.zeros(numbers_of_point_to_measure)
     power = np.zeros(numbers_of_point_to_measure)
@@ -49,15 +50,17 @@ def do_measure(numbers_of_point_to_measure, start_current, stop_current, output_
     ax1.set_xlabel('Current [mA]')
     ax1.set_ylabel('Power [mW]', color='r')
     ax2.set_ylabel('Voltage [V]', color='g')
-    save_data(output_file, current, voltage, power)
+    save_data(output_file, wavelength, current, voltage, power)
     plt.grid(True)
     plt.show()
 
 
-def save_data(output_file, current, voltage, power):
+def save_data(output_file,wavelength, current, voltage, power):
     now = datetime.datetime.now()
-    info = "Measurment \n"
-    info += now.strftime("%Y-%m-%d %H:%M")
+    info = "Measurment \t "
+    info += str(wavelength)
+    info += " nm"
+    info += now.strftime("\t %Y-%m-%d %H:%M")
     np.savetxt(output_file, np.c_[current, voltage, power], fmt='%1.16f', header=info)
 
 
@@ -72,6 +75,8 @@ if __name__ == "__main__":
                     default=0, help="Start current in mA")
     parser.add_argument("-ec", "--stop_current", type=float,
                     default=0, help="Stop current in mA")
+    parser.add_argument("-to" , "--timeout", type=float,
+                        default=0.1, help="timeout between set current and measurement")
     parser.add_argument("-fn", "--file_name", type=str,
                     default=os.path.join(OUTPUT_FILE, "data.txt"),
                     help="path to output file")
@@ -80,6 +85,7 @@ if __name__ == "__main__":
     print("Numbers of points to measure: %s"  %args.numbers_of_points_to_measure)
     print("Start current %s mA" %args.start_current)
     print("Stop current %s mA"  %args.stop_current)
+    print("Timeout %s s" %args.timeout)
     print("Path to output file with data:", end=" ")
     print(args.file_name)
 
